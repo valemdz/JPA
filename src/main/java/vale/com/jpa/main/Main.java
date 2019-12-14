@@ -1,19 +1,37 @@
  package vale.com.jpa.main;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
+
+
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+
+import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.spi.PersistenceUnitInfo;
+
+import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import vale.com.jpa.domain.Persona;
+
+
 
 public class Main {
 	
 	
 	public static void main( String args[] ) {
 		
+		// Haremos de Contenedor de aplicaciones	
 		
-		//jpa_main es el nombre del persistence unit especificado en persistence.xml
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa_main");
+		PersistenceProvider persistence = new HibernatePersistenceProvider();
+		
+		
+		// En el Map van las propiedades el persistence.xml
+		
+		PersistenceUnitInfo info = new SimplePersistenceInfo("vale_hibernate"); 
+		
+		EntityManagerFactory emf = persistence.createContainerEntityManagerFactory(info,  getMapPropertiesPersistenceUnit() );
 		EntityManager em = emf.createEntityManager();
 		
 		em.getTransaction().begin();
@@ -31,6 +49,16 @@ public class Main {
 		
 		
 	} 
+	
+	private static Map<String, String> getMapPropertiesPersistenceUnit(){
+		
+		Map<String, String> properties = new HashMap<>();
+		properties.put( "javax.persistence.jdbc.url", "jdbc:h2:mem:test" );
+		properties.put( "javax.persistence.schema-generation.database.action", "create" );
+		properties.put( "hibernate.show_sql", "true" );
+		return properties;
+		
+	}
 	
 
 	
