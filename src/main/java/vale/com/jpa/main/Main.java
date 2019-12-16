@@ -1,5 +1,8 @@
  package vale.com.jpa.main;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,18 +14,24 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 
+import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionCreator;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import vale.com.jpa.domain.Persona;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Main {
+	
+	private final static Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	
 	public static void main( String args[] ) {
 		
 		// Haremos de Contenedor de aplicaciones	
+		
 		
 		PersistenceProvider persistence = new HibernatePersistenceProvider();
 		
@@ -34,13 +43,21 @@ public class Main {
 		EntityManagerFactory emf = persistence.createContainerEntityManagerFactory(info,  getMapPropertiesPersistenceUnit() );
 		EntityManager em = emf.createEntityManager();
 		
-		em.getTransaction().begin();
+		em.getTransaction().begin();	
+	
 		
-		Persona nueva = new Persona();
-		nueva.setNombre("Valeria del Valle ");
 		
-		em.persist(nueva);
-		em.getTransaction().commit();
+		insertarConJDBC();		
+			
+		Persona reference  =  em.getReference( Persona.class, "SocoXXX" );		
+		System.out.println( "reference " + reference.getClass().getName() );		
+		reference.getNombre();
+		System.out.println( "Llamo nombre");	
+		reference.getAficion();
+		System.out.println( "Llamo aficion");
+		
+		
+		
 		em.close();
 	
 		// cierra el pool de conexion y permite finalizar el proceso 
@@ -60,9 +77,22 @@ public class Main {
 		
 	}
 	
-
-	
-	
+    private static void insertarConJDBC() {
+    	try {
+    		
+			Connection conexion =  DriverManager.getConnection("jdbc:h2:mem:test");
+			conexion.prepareStatement( "insert into Persona ( nombre, aficion )"
+									   + " values ( 'Soco', 'runing')" ).executeUpdate();
+			
+			conexion.commit();
+			conexion.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}    	
+    	
+    }	
 	
 
 }
