@@ -1,14 +1,25 @@
 package vale.com.jpa.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public  class Persona {
-
+	
 	@Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private long id;
+	
 	String nombre;
 	
+	
+
+	public Persona(String nombre) {
+		super();
+		this.nombre = nombre;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -16,6 +27,14 @@ public  class Persona {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	@Override
@@ -41,6 +60,7 @@ public  class Persona {
 		return true;
 	}
 
+   
 	
 	
 	

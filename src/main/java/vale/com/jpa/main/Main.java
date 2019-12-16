@@ -3,7 +3,11 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -46,14 +50,15 @@ public class Main {
 		EntityManager em = emf.createEntityManager();		
 		em.getTransaction().begin();	
 	
-		Persona nueva = new Persona();
-		nueva.setNombre("Soco");
 		
-		Persona find = em.getReference( Persona.class, "Soco" );
+		Collection<Persona> personas = new HashSet<>();
 		
-		System.out.println( "Nueva igual a find " + nueva.equals(find) );
+		personas.add( new Persona( "Lola") );
+		personas.add( new Persona( "Marcos") );
+		personas.add( new Persona( "Pancho") );
 		
-		System.out.println( "find igual Nueva  " + find.equals(nueva) );
+		personas.forEach( p -> em.persist(p));
+		
 		
 		em.getTransaction().commit();
 		
