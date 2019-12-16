@@ -5,10 +5,10 @@ import javax.persistence.Id;
 
 @Entity
 public  class Persona {
-	
+
 	@Id
 	String nombre;
-	String aficion="";
+	
 
 	public String getNombre() {
 		return nombre;
@@ -18,17 +18,30 @@ public  class Persona {
 		this.nombre = nombre;
 	}
 
-	public String getAficion() {
-		return aficion;
-	}
-
-	public void setAficion(String aficion) {
-		this.aficion = aficion;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getNombre() == null) ? 0 : getNombre().hashCode());
+		return result;
 	}
 
 	@Override
-	public String toString() {
-		return "Persona [nombre=" + nombre + ", aficion=" + aficion + "]";
-	}	
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Persona))
+			return false;
+		Persona other = (Persona) obj;
+		if (getNombre() == null) {
+			if (other.getNombre() != null)
+				return false;
+		} else if (!getNombre().equals(other.getNombre()))
+			return false;
+		return true;
+	}
 
+	
+	
+	
 }

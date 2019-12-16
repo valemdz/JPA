@@ -19,13 +19,13 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import vale.com.jpa.domain.Persona;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 public class Main {
 	
-	private final static Logger logger = LoggerFactory.getLogger(Main.class);
+	//private final static Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	
 	public static void main( String args[] ) {
@@ -41,22 +41,21 @@ public class Main {
 		PersistenceUnitInfo info = new SimplePersistenceInfo("vale_hibernate"); 
 		
 		EntityManagerFactory emf = persistence.createContainerEntityManagerFactory(info,  getMapPropertiesPersistenceUnit() );
-		EntityManager em = emf.createEntityManager();
+		insertarConJDBC();
 		
+		EntityManager em = emf.createEntityManager();		
 		em.getTransaction().begin();	
 	
+		Persona nueva = new Persona();
+		nueva.setNombre("Soco");
 		
+		Persona find = em.getReference( Persona.class, "Soco" );
 		
-		insertarConJDBC();		
-			
-		Persona reference  =  em.getReference( Persona.class, "SocoXXX" );		
-		System.out.println( "reference " + reference.getClass().getName() );		
-		reference.getNombre();
-		System.out.println( "Llamo nombre");	
-		reference.getAficion();
-		System.out.println( "Llamo aficion");
+		System.out.println( "Nueva igual a find " + nueva.equals(find) );
 		
+		System.out.println( "find igual Nueva  " + find.equals(nueva) );
 		
+		em.getTransaction().commit();
 		
 		em.close();
 	
@@ -81,8 +80,8 @@ public class Main {
     	try {
     		
 			Connection conexion =  DriverManager.getConnection("jdbc:h2:mem:test");
-			conexion.prepareStatement( "insert into Persona ( nombre, aficion )"
-									   + " values ( 'Soco', 'runing')" ).executeUpdate();
+			conexion.prepareStatement( "insert into Persona ( nombre )"
+									   + " values ( 'Soco')" ).executeUpdate();
 			
 			conexion.commit();
 			conexion.close();
