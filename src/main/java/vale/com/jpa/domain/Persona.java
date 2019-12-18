@@ -1,20 +1,34 @@
 package vale.com.jpa.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public  class Persona {
 	
 	@Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private long id;
-	
+    private long id;	
 	String nombre;
 	
+	@OneToMany( mappedBy = "propietario") Set<Coche> coches = new HashSet<>();
 	
+
+	@ManyToOne
+	@JoinColumn(name = "persona_id", nullable = true)
+	Persona padre;
+	
+	public Persona() {
+		super();
+	}
 
 	public Persona(String nombre) {
 		super();
@@ -35,6 +49,25 @@ public  class Persona {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+
+	public Set<Coche> getCoches() {
+		return coches;
+	}
+
+	public void setCoches(Set<Coche> coches) {
+		this.coches = coches;
+	}
+	
+	
+
+	public Persona getPadre() {
+		return padre;
+	}
+
+	public void setPadre(Persona padre) {
+		this.padre = padre;
 	}
 
 	@Override
@@ -59,9 +92,6 @@ public  class Persona {
 			return false;
 		return true;
 	}
-
-   
-	
 	
 	
 }
