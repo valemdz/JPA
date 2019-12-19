@@ -1,4 +1,4 @@
-package vale.com.jpa.main;
+package vale.com.jpa.sources;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
